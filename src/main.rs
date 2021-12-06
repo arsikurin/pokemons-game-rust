@@ -1,6 +1,7 @@
 // use std::collections::{HashMap, VecDeque};
-use pokemons_game::{Pokemon, PokemonStates, TrainerStates, BattleStates};
+use pokemons_game::{Pokemon, BattleStates};
 use std::io;
+use rand::Rng;
 
 // trait Pokemons {
 //     fn n(&self);
@@ -13,7 +14,6 @@ use std::io;
 // }
 
 // use crate::test::test1;
-//
 // mod test {
 //     pub enum En {}
 //
@@ -45,37 +45,72 @@ use std::io;
 //     };
 // }
 
+// number of pokemons in each team
+const N: i32 = 2; // nmref
+const MAX_POKEMON_ATK: i32 = 5;
+const MAX_POKEMON_DF: i32 = 5;
+
+
 fn main() {
-    let mut pokemon1 = Pokemon { state: PokemonStates::Caught, name: String::from("pikachu"), hp: 100, atk: 10, df: 0 };
-    let mut pokemon2 = Pokemon { state: PokemonStates::Caught, name: String::from("kurkur"), hp: 100, atk: 50, df: 0 };
-    // println!("{:?}\n{:?}\n\n", pokemon1, pokemon2);
-    // pokemon1.attack(&mut pokemon2);
-    // println!("{:?}\n{:?}", pokemon1, pokemon2);
+    let mut player1: Vec<Pokemon> = Vec::new();
+    let mut player2 = Vec::new();
 
-    println!("#1: Name: {} Atk: {} HP: {} Df: {}", pokemon1.name, pokemon1.atk, pokemon1.hp, pokemon1.df);
-    println!("#2: Name: {} Atk: {} HP: {} Df: {}", pokemon2.name, pokemon2.atk, pokemon2.hp, pokemon2.df);
-    let mut input = String::new();
-    match io::stdin().read_line(&mut input) {
-        Ok(..) => {
-            match &input.trim().parse::<i32>() {
-                Ok(..) => println!("1nd player's choice ->{}", input),
-                Err(e) => println!("ERROR: not a number ({})", e),
+    for _ in 0..N {
+        let poks = gen_pokemons();
+        println!("#1: Name: {} Atk: {} HP: {} Df: {}", poks[0].name, poks[0].atk, poks[0].hp, poks[0].df);
+        println!("#2: Name: {} Atk: {} HP: {} Df: {}", poks[1].name, poks[1].atk, poks[1].hp, poks[1].df);
+        let mut input = String::new();
+        match io::stdin().read_line(&mut input) {
+            Ok(..) => {
+                let choice = input.trim().parse::<usize>().unwrap();
+                println!("1st player's choice ->{}", input);
+                if choice > 2 || choice < 0 {
+                    panic!("ERROR: specify `1` or `2`")
+                }
+                player1.push(poks[choice - 1].clone());
             }
+            Err(e) => panic!("ERROR: {}", e),
         }
-        Err(error) => println!("ERROR: {}", error),
-    }
 
-    println!("#1: Name: {} Atk: {} HP: {} Df: {}", pokemon1.name, pokemon1.atk, pokemon1.hp, pokemon1.df);
-    println!("#2: Name: {} Atk: {} HP: {} Df: {}", pokemon2.name, pokemon2.atk, pokemon2.hp, pokemon2.df);
-    let mut input = String::new();
-    match io::stdin().read_line(&mut input) {
-        Ok(..) => {
-            match &input.trim().parse::<i32>() {
-                Ok(..) => println!("2nd player's choice ->{}", input),
-                Err(e) => println!("ERROR: not a number ({})", e),
+        let poks = gen_pokemons();
+        println!("#1: Name: {} Atk: {} HP: {} Df: {}", poks[0].name, poks[0].atk, poks[0].hp, poks[0].df);
+        println!("#2: Name: {} Atk: {} HP: {} Df: {}", poks[1].name, poks[1].atk, poks[1].hp, poks[1].df);
+        let mut input = String::new();
+        match io::stdin().read_line(&mut input) {
+            Ok(..) => {
+                let choice = input.trim().parse::<usize>().unwrap();
+                println!("2nd player's choice ->{}", input);
+                if choice > 2 || choice < 0 {
+                    panic!("ERROR: specify `1` or `2`")
+                }
+                player2.push(poks[choice - 1].clone());
+                // let choice = input.trim().parse::<i32>();
+                // match choice {
+                //     Ok(..) => {
+                //         println!("2nd player's choice ->{}", input);
+                //         player2.push(choice.unwrap());
+                //     }
+                //     Err(e) => panic!("ERROR: not a number ({})", e),
+                // }
             }
+            Err(e) => panic!("ERROR: {}", e),
         }
-        Err(error) => println!("ERROR: {}", error),
     }
+}
 
+fn gen_pokemons() -> Vec<Pokemon> {
+    vec![
+        Pokemon {
+            name: String::from("pikachu"),
+            hp: 100,
+            atk: rand::thread_rng().gen_range(1..=MAX_POKEMON_ATK),
+            df: rand::thread_rng().gen_range(1..=MAX_POKEMON_DF),
+        },
+        Pokemon {
+            name: String::from("kurkur"),
+            hp: 100,
+            atk: rand::thread_rng().gen_range(1..=MAX_POKEMON_ATK),
+            df: rand::thread_rng().gen_range(1..=MAX_POKEMON_DF),
+        },
+    ]
 }

@@ -1,30 +1,21 @@
 #[derive(Debug)]
-pub enum PokemonStates {
-    Caught = 0,
-    Wild = 1,
-}
-
-#[derive(Debug)]
-pub enum TrainerStates {
-    Idle = 0,
-    Fighting = 1,
-}
-
-#[derive(Debug)]
 pub enum BattleStates {
     NotStarted = 0,
     Started = 1,
     Finished = 2,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Pokemon {
-    pub state: PokemonStates,
     pub name: String,
     pub hp: i32,
     pub atk: i32,
     pub df: i32,
 }
+
+// trait Clone {
+//     fn clone(&self) -> Self;
+// }
 
 impl Pokemon {
     pub fn attack(&mut self, other: &mut Pokemon) {
