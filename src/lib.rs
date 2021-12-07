@@ -13,10 +13,6 @@ pub struct Pokemon {
     pub df: i32,
 }
 
-// trait Clone {
-//     fn clone(&self) -> Self;
-// }
-
 impl Pokemon {
     pub fn attack(&mut self, other: &mut Pokemon) {
         let mut damage = self.atk;

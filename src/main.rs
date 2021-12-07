@@ -45,8 +45,8 @@ use rand::Rng;
 //     };
 // }
 
-// number of pokemons in each team
-const N: i32 = 2; // nmref
+// N: number of pokemons in each team
+const N: i32 = 1;
 const MAX_POKEMON_ATK: i32 = 5;
 const MAX_POKEMON_DF: i32 = 5;
 
@@ -54,7 +54,7 @@ const MAX_POKEMON_DF: i32 = 5;
 fn main() {
     let mut player1: Vec<Pokemon> = Vec::new();
     let mut player2 = Vec::new();
-
+    println!("Enter `1` or `2`");
     for _ in 0..N {
         let poks = gen_pokemons();
         println!("#1: Name: {} Atk: {} HP: {} Df: {}", poks[0].name, poks[0].atk, poks[0].hp, poks[0].df);
@@ -96,18 +96,71 @@ fn main() {
             Err(e) => panic!("ERROR: {}", e),
         }
     }
+    // dbg!(player1, player2);
+
+    let mut turn = 1;
+    let mut shift = 0;
+    for pok1 in 0..player1.len() {
+        if player1[pok1 + shift].hp <= 0 { continue; };
+        for pok2 in 0..player2.len() {
+            if player2[pok2].hp <= 0 {
+                continue;
+            };
+            if player1[pok1 + shift].hp <= 0 {
+                shift + 1;
+            };
+            loop {
+                if player2[pok2].hp <= 0 {
+                    break;
+                };
+                if player1[pok1 + shift].hp <= 0 {
+                    shift + 1;
+                    break;
+                };
+                if turn == 1 {
+                    player1[pok1 + shift].attack(&mut player2[pok2]);
+                    turn = 2;
+                } else {
+                    player2[pok2].attack(&mut player1[pok1 + shift]);
+                    turn = 1;
+                }
+            }
+        }
+    }
+    // dbg!(&player1, &player2);
+
+    let mut win = 0;
+    for pok in &player1 {
+        if pok.hp > 0 {
+            win = 1;
+            break;
+        }
+    }
+    for pok in &player2 {
+        if pok.hp > 0 {
+            win = 2;
+            break;
+        }
+    }
+    if win == 1 {
+        println!("Congrats to player 1! You won!")
+    } else if win == 2 {
+        println!("Congrats to player 2! You won!")
+    } else {
+        println!("I am confused... No one won!")
+    }
 }
 
 fn gen_pokemons() -> Vec<Pokemon> {
     vec![
         Pokemon {
-            name: String::from("pikachu"),
+            name: String::from("Pikachu"),
             hp: 100,
             atk: rand::thread_rng().gen_range(1..=MAX_POKEMON_ATK),
             df: rand::thread_rng().gen_range(1..=MAX_POKEMON_DF),
         },
         Pokemon {
-            name: String::from("kurkur"),
+            name: String::from("Charizard"),
             hp: 100,
             atk: rand::thread_rng().gen_range(1..=MAX_POKEMON_ATK),
             df: rand::thread_rng().gen_range(1..=MAX_POKEMON_DF),
