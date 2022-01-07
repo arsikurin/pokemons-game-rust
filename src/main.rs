@@ -52,7 +52,7 @@ const MAX_POKEMON_DF: i32 = 5;
 
 
 fn main() {
-    let mut player1: Vec<Pokemon> = Vec::new();
+    let mut player1 = Vec::new();
     let mut player2 = Vec::new();
     println!("Enter `1` or `2`");
     for _ in 0..N {
